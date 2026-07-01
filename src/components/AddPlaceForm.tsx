@@ -274,7 +274,7 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                         disabled={isSubmitting}
                         className="flex-1 py-3 rounded-2xl bg-[#004F30] text-white text-sm font-black hover:bg-[#005C39] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                        {isSubmitting ? 'Sharing...' : 'Share Spot 🛺'}
+                        {isSubmitting ? 'Sharing...' : 'Share Spot 🍜'}
                     </button>
                 </div>
             </form>

@@ -30,7 +30,7 @@ export function Navbar() {
                             <span className="text-2xl font-black tracking-tighter text-[#004F30]">
                                 FoodieSpot
                             </span>
-                            <span className="text-lg">🛺</span>
+                            <span className="text-lg">🍜</span>
                         </Link>
 
                         {/* Nav links */}
@@ -78,7 +78,7 @@ export function Navbar() {
             <nav className="sm:hidden flex items-center justify-between px-4 py-3 bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100">
                 <Link to="/" className="flex items-center gap-1.5">
                     <span className="text-xl font-black tracking-tighter text-[#004F30]">FoodieSpot</span>
-                    <span>🛺</span>
+                    <span>🍜</span>
                 </Link>
                 <button
                     onClick={() => setMobileOpen(o => !o)}

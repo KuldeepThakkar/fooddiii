@@ -35,8 +35,8 @@ export function CatMascot() {
 
             <svg width="60" height="60" viewBox="0 0 100 100" className="drop-shadow-2xl">
                 {/* Simple 2D Cat SVG */}
-                <circle cx="50" cy="50" r="40" fill="#2B2D2F" /> {/* Body */}
-                <path d="M20 30 L35 10 L50 30 Z" fill="#2B2D2F" /> {/* Left Ear */}
+                <circle cx="50" cy="50" r="40" fill="#2f2e2bff" /> {/* Body */}
+                <path d="M20 30 L35 10 L50 30 Z" fill="#2f2e2bff" /> {/* Left Ear */}
                 <path d="M80 30 L65 10 L50 30 Z" fill="#2B2D2F" /> {/* Right Ear */}
                 <circle cx="35" cy="45" r="5" fill="#facc15" /> {/* Left Eye */}
                 <circle cx="65" cy="45" r="5" fill="#facc15" /> {/* Right Eye */}

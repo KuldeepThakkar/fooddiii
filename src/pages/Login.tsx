@@ -59,7 +59,7 @@ export function Login() {
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 {/* Branding */}
                 <div className="text-center mb-8">
-                    <div className="text-5xl mb-3">🛺</div>
+                    <div className="text-5xl mb-3">🤤</div>
                     <h1 className="text-3xl font-black text-slate-900">
                         {mode === 'login' ? 'Welcome back!' : 'Join FoodieSpot'}
                     </h1>

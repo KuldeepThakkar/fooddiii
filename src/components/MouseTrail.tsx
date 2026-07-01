@@ -32,6 +32,7 @@ export function MouseTrail() {
                 style={{
                     left: position.x - 20,
                     top: position.y - 20,
+                    rotate: '180deg',
                     filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.15))'
                 }}
             >

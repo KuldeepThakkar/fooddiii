@@ -23,7 +23,7 @@ export function PlaceCard({ place, onViewDetails }: PlaceCardProps) {
         Restaurant: '🍽️',
         Cafe: '☕',
         Dessert: '🍦',
-        'Street Food': '🛺',
+        'Street Food': '🍜',
         Other: '📍',
     };
 
