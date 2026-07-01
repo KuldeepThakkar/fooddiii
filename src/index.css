@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --porsche-green: #004F30;
+    /* Deep Racing Green */
+    --porsche-green-light: #005C39;
+    --metallic-grey: #2B2D2F;
+    --chrome-silver: #D1D5DB;
+    --bg-porsche: #f3f4f6;
+    --shadow-porsche: 0 25px 50px -12px rgba(0, 79, 48, 0.25);
+}
+
+@layer base {
+    body {
+        @apply bg-gray-100 text-slate-900 selection:bg-green-200 cursor-default;
+    }
+}
+
+@layer components {
+    .glass-card {
+        @apply bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl;
+    }
+
+    .btn-porsche {
+        @apply relative bg-[#004F30] text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest transition-all duration-300 transform active:scale-95 overflow-hidden;
+    }
+
+    .btn-porsche:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0, 79, 48, 0.3);
+    }
+
+    .btn-secondary {
+        @apply bg-slate-200 text-slate-800 px-8 py-4 rounded-xl font-bold transition-all hover:bg-slate-300;
+    }
+
+    .rich-gradient {
+        @apply bg-gradient-to-br from-[#004F30] via-[#005C39] to-slate-800;
+    }
+
+    .floating {
+        animation: floating 3s ease-in-out infinite;
+    }
+
+    /* Gliding Mouse Trail classes */
+    .mouse-trail {
+        @apply pointer-events-none fixed w-4 h-4 rounded-full bg-[#004F30]/30 blur-sm z-[9999];
+        transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+}
+
+@keyframes floating {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(1deg);
+    }
+
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(-5%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+
+    50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+/* Custom Map Marker Styles */
+.marker-open {
+    animation: marker-pulse 2s infinite;
+    z-index: 1000;
+}
+
+@keyframes marker-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 79, 48, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(0, 79, 48, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 79, 48, 0);
+    }
+}
