@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Place, getAvgRating, isOpenNow } from '../types';
+import { Place } from '../types';
+import { isOpenNow } from '../lib/utils';
 import { X, Star, Clock, MapPin, User, Plus, ChevronDown } from 'lucide-react';
 import { useReviews } from '../hooks/useReviews';
 import { ReviewModal } from './ReviewModal';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 interface PlaceDetailDrawerProps {
     place: Place | null;
@@ -28,7 +29,7 @@ export function PlaceDetailDrawer({ place, onClose }: PlaceDetailDrawerProps) {
     if (!place) return null;
 
     const open = isOpenNow(place.openTime, place.closeTime);
-    const avgRating = getAvgRating(place);
+    const avgRating = place.rating > 0 ? place.rating.toFixed(1) : null;
 
     return (
         <>
@@ -59,12 +60,12 @@ export function PlaceDetailDrawer({ place, onClose }: PlaceDetailDrawerProps) {
                                 <span className={`w-1.5 h-1.5 rounded-full ${open ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
                                 {open ? 'Open Now' : 'Closed'}
                             </span>
-                            <span className="text-xs text-slate-400 font-medium">{place.type}</span>
+                            <span className="text-xs text-slate-400 font-medium">{place.category}</span>
                         </div>
                         <h2 id="drawer-title" className="text-xl font-black text-slate-900">{place.name}</h2>
                         <p className="text-sm text-slate-500 mt-1 flex items-center gap-1">
                             <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                            {place.location}
+                            {place.address || `${place.coordinates[0].toFixed(4)}, ${place.coordinates[1].toFixed(4)}`}
                         </p>
                     </div>
                     <button
@@ -85,7 +86,7 @@ export function PlaceDetailDrawer({ place, onClose }: PlaceDetailDrawerProps) {
                                 <Star className="w-4 h-4 fill-current" />
                                 {avgRating || '—'}
                             </div>
-                            <div className="text-xs text-slate-400 mt-0.5">{place.ratingCount} reviews</div>
+                            <div className="text-xs text-slate-400 mt-0.5">{place.reviewCount} reviews</div>
                         </div>
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-1 text-slate-700 font-black text-sm">
@@ -160,13 +161,9 @@ export function PlaceDetailDrawer({ place, onClose }: PlaceDetailDrawerProps) {
                                 {reviews.map(review => (
                                     <div key={review.id} className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
                                         <div className="flex items-start gap-3">
-                                            {review.userAvatar ? (
-                                                <img src={review.userAvatar} alt={review.userName} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-                                            ) : (
-                                                <div className="w-8 h-8 rounded-full bg-[#004F30] flex items-center justify-center flex-shrink-0">
+                                            <div className="w-8 h-8 rounded-full bg-[#004F30] flex items-center justify-center flex-shrink-0">
                                                     <User className="w-4 h-4 text-white" />
                                                 </div>
-                                            )}
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center justify-between gap-2">
                                                     <span className="font-bold text-slate-800 text-sm truncate">{review.userName || 'Foodie'}</span>
@@ -177,8 +174,8 @@ export function PlaceDetailDrawer({ place, onClose }: PlaceDetailDrawerProps) {
                                                     </div>
                                                 </div>
                                                 <p className="text-sm text-slate-600 mt-1 leading-relaxed">{review.text}</p>
-                                                {review.photoUrl && (
-                                                    <img src={review.photoUrl} alt="Review photo" className="mt-2 rounded-xl w-full h-32 object-cover" />
+                                                {review.photos && review.photos.length > 0 && (
+                                                    <img src={review.photos[0]} alt="Review photo" className="mt-2 rounded-xl w-full h-32 object-cover" />
                                                 )}
                                                 <p className="text-[11px] text-slate-400 mt-2">
                                                     {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
