@@ -10,6 +10,8 @@ import { CatMascot } from './components/CatMascot';
 import { MouseTrail } from './components/MouseTrail';
 import { useAuthStore } from './stores/authStore';
 import { usePlacesStore } from './stores/placesStore';
+import { ModalHost } from './components/ModalHost';
+import { ToastProvider } from './components/ui/ToastProvider';
 
 function App() {
     const initializeAuth = useAuthStore((state) => state.initialize);
@@ -25,6 +27,8 @@ function App() {
             <MouseTrail />
             <CatMascot />
             <Navbar />
+            <ModalHost />
+            <ToastProvider />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/explore" element={<Explore />} />

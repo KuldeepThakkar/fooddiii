@@ -16,15 +16,25 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     if (!isAuthenticated && !isLoading) {
-      // Show auth modal instead of redirecting
       openModal('auth');
     }
   }, [isAuthenticated, isLoading, openModal]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
-  // Return children - modal will show if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <p className="text-slate-500 text-sm">Please sign in to continue...</p>
+      </div>
+    );
+  }
+
   return <>{children}</>;
 }

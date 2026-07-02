@@ -8,11 +8,17 @@ import { PlaceDetailDrawer } from '../components/PlaceDetailDrawer';
 import { useSearchParams } from 'react-router-dom';
 import { Place } from '../types';
 import { Map as MapIcon, List, Clock, Plus, Navigation, Search, WifiOff } from 'lucide-react';
+import { useProtectedAction } from '../hooks/useProtectedAction';
+import { useAuth } from '../hooks/useAuth';
+import { useUIStore } from '../stores/uiStore';
 
 const POPULAR_FOOD_TAGS = ['momos', 'chaat', 'dosa', 'vada pav', 'pav bhaji', 'chai', 'dabeli', 'kachori'];
 
 export function Explore() {
     const { places, addPlace, getNearbyPlaces, searchPlaces, getOpenNow, favorites } = usePlaces();
+    const { user } = useAuth();
+    const executeIfAuth = useProtectedAction();
+    const { openModal } = useUIStore();
     const [searchParams, setSearchParams] = useSearchParams();
     const [showOnlyOpen, setShowOnlyOpen] = useState(true);
     const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
@@ -31,6 +37,13 @@ export function Explore() {
     const isAdding = searchParams.get('action') === 'add';
     const searchTerm = searchParams.get('q') || '';
     const isSurprise = searchParams.get('surprise') === 'true';
+
+    useEffect(() => {
+        if (isAdding && !user) {
+            openModal('auth');
+            setSearchParams({});
+        }
+    }, [isAdding, user, openModal, setSearchParams]);
 
     // Online/offline detection
     useEffect(() => {
@@ -202,8 +215,9 @@ export function Explore() {
 
                         {/* Add Spot */}
                         <button
-                            onClick={() => setSearchParams({ action: 'add' })}
-                            className="flex items-center gap-2 bg-[#004F30] text-white px-4 py-2.5 rounded-2xl text-sm font-black hover:bg-[#005C39] transition-all shadow-md hover:shadow-lg"
+                            onClick={() => executeIfAuth(() => setSearchParams({ action: 'add' }))}
+                            className="flex items-center gap-2 bg-[#004F30] text-white px-4 py-2.5 min-h-[44px] rounded-2xl text-sm font-black hover:bg-[#005C39] transition-all shadow-md hover:shadow-lg"
+                            aria-label="Add a new food spot"
                         >
                             <Plus className="w-4 h-4" />
                             <span className="hidden sm:inline">Add Spot</span>
@@ -339,7 +353,7 @@ export function Explore() {
             </div>
 
             {/* Add Place Modal */}
-            {isAdding && (
+            {isAdding && user && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <AddPlaceForm
                         onAddPlace={handleAddPlace}

@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Utensils, Sparkles, ChevronRight } from 'lucide-react';
 import { PreferenceModal } from '../components/PreferenceModal';
+import { useProtectedAction } from '../hooks/useProtectedAction';
+import { useNavigate } from 'react-router-dom';
 
 export function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const executeIfAuth = useProtectedAction();
+    const navigate = useNavigate();
+
+    const handleShareSpot = () => {
+        executeIfAuth(() => navigate('/explore?action=add'));
+    };
 
     return (
         <div className="min-h-screen bg-[#f3f4f6] selection:bg-green-100">
@@ -43,13 +50,14 @@ export function Home() {
                             <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                         </button>
 
-                        <Link
-                            to="/explore?action=add"
-                            className="btn-3d glass-card px-12 py-6 rounded-xl flex items-center justify-center space-x-3 text-slate-700 font-bold group border-slate-200"
+                        <button
+                            type="button"
+                            onClick={handleShareSpot}
+                            className="btn-3d glass-card px-12 py-6 rounded-xl flex items-center justify-center space-x-3 text-slate-700 font-bold group border-slate-200 min-h-[48px]"
                         >
                             <Utensils className="w-6 h-6 text-green-700 group-hover:rotate-12 transition-transform" />
                             <span className="text-lg">Share a Spot</span>
-                        </Link>
+                        </button>
                     </div>
                 </div>
 
