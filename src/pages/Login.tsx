@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { LogIn, ArrowLeft, Eye, EyeOff, Loader2, UserPlus } from 'lucide-react';
 
 export function Login() {
@@ -11,12 +11,13 @@ export function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [formError, setFormError] = useState('');
 
-    const { login, register, isLoading, isOfflineMode } = useAuth();
+    const { login, signup, isLoading, error, clearError } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormError('');
+        clearError();
 
         if (!email || !password) {
             setFormError('Please fill in all fields.');
@@ -31,14 +32,15 @@ export function Login() {
             return;
         }
 
-        const result = mode === 'login'
-            ? await login(email, password)
-            : await register(email, password, displayName.trim());
-
-        if (result.success) {
+        try {
+            if (mode === 'login') {
+                await login(email, password);
+            } else {
+                await signup(displayName.trim(), email, password);
+            }
             navigate('/explore');
-        } else {
-            setFormError(result.error || 'Authentication failed. Please try again.');
+        } catch (err) {
+            setFormError(error || 'Authentication failed. Please try again.');
         }
     };
 
@@ -70,15 +72,13 @@ export function Login() {
                     </p>
                 </div>
 
-                {/* Offline mode notice */}
-                {isOfflineMode && (
-                    <div className="mb-4 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
-                        <p className="text-amber-800 text-sm font-semibold">Demo Mode Active</p>
-                        <p className="text-amber-600 text-xs mt-0.5">
-                            Supabase is not configured. Enter any email/password to continue as a demo user.
-                        </p>
-                    </div>
-                )}
+                {/* Demo mode notice */}
+                <div className="mb-4 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+                    <p className="text-amber-800 text-sm font-semibold">Demo Mode Active</p>
+                    <p className="text-amber-600 text-xs mt-0.5">
+                        Using localStorage for authentication. Enter any Gmail email and password to continue.
+                    </p>
+                </div>
 
                 <div className="bg-white py-10 px-8 shadow-xl rounded-3xl border border-slate-100">
                     <form className="space-y-5" onSubmit={handleSubmit}>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { LogIn, Heart, Compass, Home, User, Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
@@ -54,11 +54,11 @@ export function Navbar() {
                             {user ? (
                                 <Link to="/profile" className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition-colors">
                                     <img
-                                        src={user.avatarUrl}
-                                        alt={user.displayName}
+                                        src={user.avatarUrl || user.avatar}
+                                        alt={user.displayName || user.name}
                                         className="w-8 h-8 rounded-full border-2 border-[#004F30]"
                                     />
-                                    <span className="font-bold text-sm text-slate-700">{user.displayName}</span>
+                                    <span className="font-bold text-sm text-slate-700">{user.displayName || user.name}</span>
                                 </Link>
                             ) : (
                                 <Link
@@ -114,7 +114,7 @@ export function Navbar() {
                                     onClick={() => setMobileOpen(false)}
                                     className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50"
                                 >
-                                    <img src={user.avatarUrl} alt={user.displayName} className="w-6 h-6 rounded-full" />
+                                    <img src={user.avatarUrl || user.avatar} alt={user.displayName || user.name} className="w-6 h-6 rounded-full" />
                                     Profile
                                 </Link>
                             ) : (

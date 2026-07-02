@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Place, PLACE_TYPES, POPULAR_TAGS } from '../types';
 import { X, MapPin, Loader2, Plus } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
+import { PLACE_CATEGORIES, POPULAR_TAGS } from '../lib/constants';
 
 const placeSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters').max(100),
     description: z.string().min(10, 'Add a brief description').max(300),
-    type: z.enum(['Restaurant', 'Cafe', 'Street Food', 'Fast Food', 'Dessert', 'Other']),
+    category: z.enum(['Restaurant', 'Cafe', 'Street Food', 'Fast Food', 'Dessert', 'Other']),
     openTime: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
     closeTime: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
     location: z.string().min(3, 'Please provide a location name'),
@@ -18,7 +18,7 @@ const placeSchema = z.object({
 type PlaceFormData = z.infer<typeof placeSchema>;
 
 interface AddPlaceFormProps {
-    onAddPlace: (place: Omit<Place, 'id' | 'ratingSum' | 'ratingCount'>) => void;
+    onAddPlace: (place: any) => void;
     onCancel: () => void;
     defaultLat?: number;
     defaultLng?: number;
@@ -36,7 +36,7 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
     const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<PlaceFormData>({
         resolver: zodResolver(placeSchema),
         defaultValues: {
-            type: 'Street Food',
+            category: 'Street Food',
             openTime: '10:00',
             closeTime: '22:00',
         },

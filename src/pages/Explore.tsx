@@ -6,13 +6,13 @@ import { PlaceMap } from '../components/Map/PlaceMap';
 import { RangeFilter } from '../components/RangeFilter';
 import { PlaceDetailDrawer } from '../components/PlaceDetailDrawer';
 import { useSearchParams } from 'react-router-dom';
-import { Place, isOpenNow } from '../types';
+import { Place } from '../types';
 import { Map as MapIcon, List, Clock, Plus, Navigation, Search, WifiOff } from 'lucide-react';
 
 const POPULAR_FOOD_TAGS = ['momos', 'chaat', 'dosa', 'vada pav', 'pav bhaji', 'chai', 'dabeli', 'kachori'];
 
 export function Explore() {
-    const { places, addPlace, getNearby } = usePlaces();
+    const { places, addPlace, getNearbyPlaces, searchPlaces, getOpenNow, favorites } = usePlaces();
     const [searchParams, setSearchParams] = useSearchParams();
     const [showOnlyOpen, setShowOnlyOpen] = useState(true);
     const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
@@ -90,33 +90,52 @@ export function Explore() {
 
     // Combined filter
     const filteredPlaces = useMemo(() => {
-        let result = userLocation && !isDaredevil
-            ? getNearby(userLocation.lat, userLocation.lng, range, activeTag || searchTerm)
-            : places.filter(p => {
-                const term = activeTag || searchTerm;
-                if (!term) return true;
-                const lower = term.toLowerCase();
-                return p.name.toLowerCase().includes(lower) ||
-                    p.type.toLowerCase().includes(lower) ||
-                    p.tags.some(t => t.toLowerCase().includes(lower)) ||
-                    p.description.toLowerCase().includes(lower);
-            });
+        let result: Place[] = places;
 
-        if (showOnlyOpen) {
-            result = result.filter(p => isOpenNow(p.openTime, p.closeTime));
+        // Search/tag filter
+        const term = activeTag || searchTerm;
+        if (term) {
+            result = searchPlaces(term);
         }
 
+        // Location filter
+        if (userLocation && !isDaredevil) {
+            result = getNearbyPlaces(userLocation.lat, userLocation.lng, range);
+        }
+
+        // Open now filter
+        if (showOnlyOpen) {
+            result = result.filter(p => getOpenNow().includes(p));
+        }
+
+        // Surprise mode
         if (isSurprise && result.length > 0) {
             return [result[Math.floor(Math.random() * result.length)]];
         }
 
         return result;
-    }, [places, showOnlyOpen, searchTerm, isSurprise, userLocation, range, isDaredevil, activeTag, getNearby]);
+    }, [places, showOnlyOpen, searchTerm, isSurprise, userLocation, range, isDaredevil, activeTag, searchPlaces, getNearbyPlaces, getOpenNow]);
 
-    const handleAddPlace = async (data: Omit<Place, 'id' | 'ratingSum' | 'ratingCount'>) => {
-        const lat = data.lat || userLocation?.lat || 23.0247;
-        const lng = data.lng || userLocation?.lng || 72.5868;
-        await addPlace({ ...data, lat, lng });
+    const handleAddPlace = async (data: any) => {
+        // Convert old format to new format
+        const newPlace = {
+            name: data.name,
+            category: data.type || 'Street Food',
+            tags: data.tags || [],
+            cuisine: data.cuisine,
+            coordinates: [data.lat || userLocation?.lat || 23.0247, data.lng || userLocation?.lng || 72.5868] as [number, number],
+            address: data.location,
+            openTime: data.openTime || '10:00',
+            closeTime: data.closeTime || '22:00',
+            rating: 4.0,
+            reviewCount: 0,
+            priceRange: data.priceRange || '₹50-150',
+            isVeg: data.isVeg || false,
+            photos: data.imageUrl ? [data.imageUrl] : [],
+            description: data.description || '',
+        };
+        
+        addPlace(newPlace);
         setSearchParams({});
     };
 
@@ -272,6 +291,8 @@ export function Explore() {
                                 <PlaceCard
                                     key={place.id}
                                     place={place}
+                                    isFavorite={favorites.isFavorite(place.id)}
+                                    onToggleFavorite={() => favorites.toggle(place.id)}
                                     onViewDetails={setSelectedPlace}
                                 />
                             ))

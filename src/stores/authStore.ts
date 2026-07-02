@@ -1,146 +1,130 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { UserProfile } from '../types';
+import type { User } from '../types';
+import {
+  getCurrentUser,
+  saveCurrentUser,
+  clearCurrentUser,
+  createUser,
+  validateCredentials,
+  updateUserProfile,
+} from '../lib/mockAuth';
 
 interface AuthState {
-    user: UserProfile | null;
-    isLoading: boolean;
-    isOfflineMode: boolean;
-    login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-    register: (email: string, password: string, displayName: string) => Promise<{ success: boolean; error?: string }>;
-    logout: () => Promise<void>;
-    initialize: () => Promise<void>;
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  
+  // Actions
+  login: (email: string, password: string) => Promise<void>;
+  signup: (name: string, email: string, password: string) => Promise<void>;
+  logout: () => void;
+  clearError: () => void;
+  updateProfile: (data: Partial<User>) => Promise<void>;
+  initialize: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-    persist(
-        (set, get) => ({
-            user: null,
-            isLoading: false,
-            isOfflineMode: !isSupabaseConfigured(),
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
 
-            initialize: async () => {
-                if (!isSupabaseConfigured()) {
-                    set({ isOfflineMode: true });
-                    return;
-                }
+  initialize: () => {
+    const user = getCurrentUser();
+    set({
+      user,
+      isAuthenticated: !!user,
+      isLoading: false,
+    });
+  },
 
-                set({ isLoading: true });
-                const { data: { session } } = await supabase.auth.getSession();
-
-                if (session?.user) {
-                    const profile = await fetchProfile(session.user.id, session.user.email || '');
-                    set({ user: profile, isLoading: false });
-                } else {
-                    set({ isLoading: false });
-                }
-
-                // Listen for auth state changes
-                supabase.auth.onAuthStateChange(async (_event, session) => {
-                    if (session?.user) {
-                        const profile = await fetchProfile(session.user.id, session.user.email || '');
-                        set({ user: profile });
-                    } else {
-                        set({ user: null });
-                    }
-                });
-            },
-
-            login: async (email: string, password: string) => {
-                if (get().isOfflineMode) {
-                    // Demo mode offline login
-                    const mockUser: UserProfile = {
-                        id: 'demo_' + email.split('@')[0],
-                        displayName: email.split('@')[0],
-                        email,
-                        avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=004F30&color=fff`,
-                    };
-                    set({ user: mockUser });
-                    return { success: true };
-                }
-
-                set({ isLoading: true });
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                set({ isLoading: false });
-
-                if (error) return { success: false, error: error.message };
-
-                if (data.user) {
-                    const profile = await fetchProfile(data.user.id, data.user.email || '');
-                    set({ user: profile });
-                }
-                return { success: true };
-            },
-
-            register: async (email: string, password: string, displayName: string) => {
-                if (get().isOfflineMode) {
-                    const mockUser: UserProfile = {
-                        id: 'demo_' + Math.random().toString(36).substring(2, 9),
-                        displayName,
-                        email,
-                        avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=004F30&color=fff`,
-                    };
-                    set({ user: mockUser });
-                    return { success: true };
-                }
-
-                set({ isLoading: true });
-                const { data, error } = await supabase.auth.signUp({ email, password });
-                set({ isLoading: false });
-
-                if (error) return { success: false, error: error.message };
-
-                if (data.user) {
-                    // Upsert profile
-                    await supabase.from('profiles').upsert({
-                        id: data.user.id,
-                        display_name: displayName,
-                        avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=004F30&color=fff`,
-                    });
-                }
-                return { success: true };
-            },
-
-            logout: async () => {
-                if (!get().isOfflineMode) {
-                    await supabase.auth.signOut();
-                }
-                set({ user: null });
-            },
-        }),
-        {
-            name: 'foodiespot-auth',
-            // Only persist the user object
-            partialize: (state) => ({ user: state.user }),
-        }
-    )
-);
-
-async function fetchProfile(userId: string, email: string): Promise<UserProfile> {
+  login: async (email: string, password: string) => {
+    set({ isLoading: true, error: null });
+    
     try {
-        const { data } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single();
-
-        if (data) {
-            return {
-                id: userId,
-                displayName: data.display_name || email.split('@')[0],
-                email,
-                avatarUrl: data.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.display_name || email)}&background=004F30&color=fff`,
-            };
-        }
-    } catch {
-        // Fallback
+      const user = validateCredentials(email, password);
+      
+      if (!user) {
+        set({
+          isLoading: false,
+          error: 'Invalid email or password',
+        });
+        return;
+      }
+      
+      saveCurrentUser(user);
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Login failed',
+      });
     }
+  },
 
-    return {
-        id: userId,
-        displayName: email.split('@')[0],
-        email,
-        avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=004F30&color=fff`,
-    };
-}
+  signup: async (name: string, email: string, password: string) => {
+    set({ isLoading: true, error: null });
+    
+    try {
+      const user = createUser(name, email, password);
+      saveCurrentUser(user);
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Signup failed',
+      });
+    }
+  },
+
+  logout: () => {
+    clearCurrentUser();
+    set({
+      user: null,
+      isAuthenticated: false,
+      error: null,
+    });
+  },
+
+  clearError: () => {
+    set({ error: null });
+  },
+
+  updateProfile: async (data: Partial<User>) => {
+    const { user } = get();
+    if (!user) return;
+    
+    set({ isLoading: true, error: null });
+    
+    try {
+      const updatedUser = updateUserProfile(user.id, data);
+      
+      if (updatedUser) {
+        saveCurrentUser(updatedUser);
+        set({
+          user: updatedUser,
+          isLoading: false,
+        });
+      } else {
+        set({
+          isLoading: false,
+          error: 'Failed to update profile',
+        });
+      }
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Update failed',
+      });
+    }
+  },
+}));

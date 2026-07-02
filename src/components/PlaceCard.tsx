@@ -1,24 +1,23 @@
 import { useState } from 'react';
-import { Place, isOpenNow, getAvgRating } from '../types';
+import { Place } from '../types';
 import { Clock, MapPin, Star, Heart, MessageSquare, ChevronRight } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useFavoritesStore } from '../stores/favoritesStore';
+import { useAuth } from '../hooks/useAuth';
+import { useProtectedAction } from '../hooks/useProtectedAction';
+import { isOpenNow } from '../lib/utils';
 
 interface PlaceCardProps {
     place: Place;
+    isFavorite?: boolean;
+    onToggleFavorite?: () => void;
     onViewDetails?: (place: Place) => void;
 }
 
-export function PlaceCard({ place, onViewDetails }: PlaceCardProps) {
+export function PlaceCard({ place, isFavorite = false, onToggleFavorite, onViewDetails }: PlaceCardProps) {
     const { user } = useAuth();
-    const { isFavorite, toggle } = useFavoritesStore();
+    const executeIfAuth = useProtectedAction();
     const [isHeartAnimating, setIsHeartAnimating] = useState(false);
 
-    const open = isOpenNow(place.openTime, place.closeTime);
-    const isFav = isFavorite(place.id);
-    const avgRating = getAvgRating(place);
-
-    const typeEmoji: Record<string, string> = {
+    const categoryEmoji: Record<string, string> = {
         'Fast Food': '🍔',
         Restaurant: '🍽️',
         Cafe: '☕',
@@ -27,11 +26,14 @@ export function PlaceCard({ place, onViewDetails }: PlaceCardProps) {
         Other: '📍',
     };
 
-    const handleFavorite = async (e: React.MouseEvent) => {
+    const open = isOpenNow(place.openTime, place.closeTime);
+
+    const handleFavorite = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (!user) return;
         setIsHeartAnimating(true);
-        await toggle(place.id, user.id);
+        executeIfAuth(() => {
+            onToggleFavorite?.();
+        });
         setTimeout(() => setIsHeartAnimating(false), 500);
     };
 
@@ -40,22 +42,22 @@ export function PlaceCard({ place, onViewDetails }: PlaceCardProps) {
             className={`
                 group relative bg-white rounded-2xl shadow-sm border transition-all duration-300
                 hover:shadow-xl hover:-translate-y-1 cursor-pointer overflow-hidden
-                ${isFav ? 'border-rose-200 shadow-rose-100' : 'border-slate-100'}
+                ${isFavorite ? 'border-rose-200 shadow-rose-100' : 'border-slate-100'}
             `}
             onClick={() => onViewDetails?.(place)}
             aria-label={`${place.name} — ${open ? 'Open now' : 'Closed'}`}
         >
             {/* Image / Gradient Header */}
             <div className="relative h-32 bg-gradient-to-br from-[#004F30] via-emerald-800 to-slate-800 overflow-hidden">
-                {place.imageUrl ? (
+                {place.photos && place.photos.length > 0 ? (
                     <img
-                        src={place.imageUrl}
+                        src={place.photos[0]}
                         alt={place.name}
                         className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
                     />
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-6xl opacity-50">{typeEmoji[place.type] || '📍'}</span>
+                        <span className="text-6xl opacity-50">{categoryEmoji[place.category] || '📍'}</span>
                     </div>
                 )}
 
@@ -71,29 +73,21 @@ export function PlaceCard({ place, onViewDetails }: PlaceCardProps) {
                     {open ? 'OPEN' : 'CLOSED'}
                 </div>
 
-                {/* Distance Badge */}
-                {place.distKm !== undefined && (
-                    <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90 backdrop-blur-sm text-slate-700 px-2 py-1 rounded-full text-xs font-bold border border-white">
-                        <MapPin className="w-3 h-3 text-[#004F30]" />
-                        {place.distKm < 1 ? `${Math.round(place.distKm * 1000)}m` : `${place.distKm}km`}
-                    </div>
-                )}
-
                 {/* Favorite Button */}
                 <button
                     onClick={handleFavorite}
                     disabled={!user}
-                    aria-label={isFav ? `Remove ${place.name} from favorites` : `Add ${place.name} to favorites`}
+                    aria-label={isFavorite ? `Remove ${place.name} from favorites` : `Add ${place.name} to favorites`}
                     className={`
                         absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center
                         backdrop-blur-sm border transition-all duration-200
                         ${user ? 'cursor-pointer hover:scale-110 active:scale-95' : 'cursor-not-allowed opacity-50'}
-                        ${isFav ? 'bg-rose-500 border-rose-400' : 'bg-white/80 border-white/60'}
+                        ${isFavorite ? 'bg-rose-500 border-rose-400' : 'bg-white/80 border-white/60'}
                         ${isHeartAnimating ? 'scale-125' : ''}
                     `}
                 >
                     <Heart
-                        className={`w-4 h-4 transition-colors ${isFav ? 'fill-white text-white' : 'text-rose-400'}`}
+                        className={`w-4 h-4 transition-colors ${isFavorite ? 'fill-white text-white' : 'text-rose-400'}`}
                     />
                 </button>
             </div>
@@ -128,10 +122,10 @@ export function PlaceCard({ place, onViewDetails }: PlaceCardProps) {
                             <Clock className="w-3.5 h-3.5" />
                             {place.openTime}–{place.closeTime}
                         </span>
-                        {place.ratingCount > 0 && (
+                        {place.reviewCount > 0 && (
                             <span className="flex items-center gap-1 text-amber-500 font-semibold">
                                 <Star className="w-3.5 h-3.5 fill-current" />
-                                {avgRating} ({place.ratingCount})
+                                {place.rating} ({place.reviewCount})
                             </span>
                         )}
                     </div>
