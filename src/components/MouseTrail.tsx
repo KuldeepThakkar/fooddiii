@@ -30,8 +30,8 @@ export function MouseTrail() {
             <div
                 className="fixed pointer-events-none z-[10000] text-3xl transition-transform duration-75 ease-out select-none"
                 style={{
-                    left: position.x - 20,
-                    top: position.y - 20,
+                    left: position.x - 10,
+                    top: position.y -5,
                     rotate: '180deg',
                     filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.15))'
                 }}
