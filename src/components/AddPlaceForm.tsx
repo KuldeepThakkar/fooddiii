@@ -13,6 +13,8 @@ const placeSchema = z.object({
     openTime: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
     closeTime: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
     location: z.string().min(3, 'Please provide a location name'),
+    cuisine: z.string().optional(),
+    priceRange: z.string().optional(),
 });
 
 type PlaceFormData = z.infer<typeof placeSchema>;
@@ -39,6 +41,8 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
             category: 'Street Food',
             openTime: '10:00',
             closeTime: '22:00',
+            cuisine: 'Indian',
+            priceRange: '₹50-200',
         },
     });
 
@@ -84,27 +88,27 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
 
     return (
         <div
-            className="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-lg"
+            className="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-2xl max-h-[90vh] flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-labelledby="add-place-title"
         >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-[#004F30] to-emerald-800">
+            <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-[#004F30] to-emerald-800 flex-shrink-0">
                 <div>
                     <h2 id="add-place-title" className="text-white font-black text-lg">Share a Food Spot</h2>
                     <p className="text-emerald-200 text-xs mt-0.5">Help the community discover local gems</p>
                 </div>
                 <button
                     onClick={onCancel}
-                    className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                    className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors flex-shrink-0"
                     aria-label="Cancel and close form"
                 >
                     <X className="w-4 h-4 text-white" />
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
+            <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5 overflow-y-auto flex-1">
                 {/* Name */}
                 <div>
                     <label htmlFor="place-name" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -114,7 +118,7 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                         id="place-name"
                         {...register('name')}
                         placeholder="e.g. Sharmaji Momo Corner"
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-[#004F30] transition"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
                     />
                     {errors.name && <p className="text-rose-500 text-xs mt-1">{errors.name.message}</p>}
                 </div>
@@ -129,24 +133,27 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                         {...register('description')}
                         placeholder="What makes this place special? Signature dishes?"
                         rows={3}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-[#004F30] transition resize-none"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent resize-none"
                     />
                     {errors.description && <p className="text-rose-500 text-xs mt-1">{errors.description.message}</p>}
                 </div>
 
-                {/* Type & Location */}
+                {/* Category & Location */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label htmlFor="place-type" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                            Type *
+                        <label htmlFor="place-category" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                            Category *
                         </label>
                         <select
-                            id="place-type"
-                            {...register('type')}
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-[#004F30] transition"
+                            id="place-category"
+                            {...register('category')}
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
                         >
-                            {PLACE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                            {['Street Food', 'Cafe', 'Restaurant', 'Fast Food', 'Dessert', 'Other'].map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
                         </select>
+                        {errors.category && <p className="text-rose-500 text-xs mt-1">{errors.category.message}</p>}
                     </div>
                     <div>
                         <label htmlFor="place-location" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -157,13 +164,13 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                                 id="place-location"
                                 {...register('location')}
                                 placeholder="Area / Street"
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-4 pr-10 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-[#004F30] transition"
+                                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-4 pr-10 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
                             />
                             <button
                                 type="button"
                                 onClick={handleDetectLocation}
                                 disabled={isDetecting}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-[#004F30] hover:bg-emerald-50 rounded-lg transition-colors"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-[#004F30] hover:bg-emerald-50 rounded-lg transition-colors disabled:opacity-50"
                                 aria-label="Detect my current location"
                             >
                                 {isDetecting ? (
@@ -182,6 +189,32 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                     </div>
                 </div>
 
+                {/* Cuisine & Price Range */}
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label htmlFor="cuisine" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                            Cuisine
+                        </label>
+                        <input
+                            id="cuisine"
+                            {...register('cuisine')}
+                            placeholder="e.g. Tibetan, Chinese"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="price-range" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                            Price Range
+                        </label>
+                        <input
+                            id="price-range"
+                            {...register('priceRange')}
+                            placeholder="e.g. ₹50-200"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
+                        />
+                    </div>
+                </div>
+
                 {/* Hours */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -192,8 +225,9 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                             id="open-time"
                             type="time"
                             {...register('openTime')}
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-[#004F30] transition"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
                         />
+                        {errors.openTime && <p className="text-rose-500 text-xs mt-1">{errors.openTime.message}</p>}
                     </div>
                     <div>
                         <label htmlFor="close-time" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -203,8 +237,9 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                             id="close-time"
                             type="time"
                             {...register('closeTime')}
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-[#004F30] transition"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
                         />
+                        {errors.closeTime && <p className="text-rose-500 text-xs mt-1">{errors.closeTime.message}</p>}
                     </div>
                 </div>
 
@@ -214,28 +249,30 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                         Tags <span className="normal-case font-normal text-slate-400">(select what applies)</span>
                     </label>
                     <div className="flex flex-wrap gap-2 mb-3">
-                        {POPULAR_TAGS.map(tag => (
+                        {POPULAR_TAGS.slice(0, 12).map(tag => (
                             <button
                                 key={tag}
                                 type="button"
                                 onClick={() => toggleTag(tag)}
-                                className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${selectedTags.includes(tag)
-                                    ? 'bg-[#004F30] text-white border-[#004F30]'
-                                    : 'bg-white text-slate-600 border-slate-200 hover:border-[#004F30]/50'}`}
+                                className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${
+                                    selectedTags.includes(tag)
+                                        ? 'bg-[#004F30] text-white border-[#004F30]'
+                                        : 'bg-white text-slate-600 border-slate-200 hover:border-[#004F30]/50'
+                                }`}
                             >
                                 {tag}
                             </button>
                         ))}
                     </div>
                     {/* Custom tag input */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mb-2">
                         <input
                             type="text"
                             value={customTag}
                             onChange={e => setCustomTag(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addCustomTag())}
                             placeholder="Add custom tag..."
-                            className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/20 focus:border-[#004F30] transition"
+                            className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004F30]/30 focus:border-transparent"
                         />
                         <button
                             type="button"
@@ -247,7 +284,7 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                         </button>
                     </div>
                     {selectedTags.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-1.5">
                             {selectedTags.map(t => (
                                 <span key={t} className="flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full text-[11px] font-semibold">
                                     {t}
@@ -259,25 +296,26 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                         </div>
                     )}
                 </div>
-
-                {/* Actions */}
-                <div className="flex gap-3 pt-2">
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        className="flex-1 py-3 rounded-2xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="flex-1 py-3 rounded-2xl bg-[#004F30] text-white text-sm font-black hover:bg-[#005C39] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                    >
-                        {isSubmitting ? 'Sharing...' : 'Share Spot 🍜'}
-                    </button>
-                </div>
             </form>
+
+            {/* Actions (Sticky Footer) */}
+            <div className="flex gap-3 p-6 border-t border-slate-200 bg-slate-50 flex-shrink-0">
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    className="flex-1 py-3 rounded-2xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100 transition-colors"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    onClick={handleSubmit(onSubmit)}
+                    className="flex-1 py-3 rounded-2xl bg-[#004F30] text-white text-sm font-black hover:bg-[#005C39] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                    {isSubmitting ? 'Sharing...' : 'Share Spot 🍜'}
+                </button>
+            </div>
         </div>
     );
 }
