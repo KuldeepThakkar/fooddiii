@@ -174,3 +174,7 @@
 {"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783070681227,"hypothesisId":"H2","runId":"pre-fix"}
 {"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1783070681218,"hypothesisId":"H1","runId":"pre-fix"}
 {"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783070681228,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:boot","message":"main.tsx executing","data":{"hasRoot":true},"timestamp":1783071762600,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783071762609,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783071762609,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1783071762602,"hypothesisId":"H1","runId":"pre-fix"}

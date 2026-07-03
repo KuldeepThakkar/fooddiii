@@ -4,7 +4,7 @@ import type { Toast } from '../types';
 import { generateUUID } from '../lib/utils';
 import { STORAGE_KEYS } from '../lib/constants';
 
-type ModalType = 'auth' | 'editPlace' | 'deleteConfirm' | null;
+type ModalType = 'auth' | 'editPlace' | 'deleteConfirm' | 'avatarCustomizer' | null;
 
 interface UIState {
   theme: 'light' | 'dark' | 'system';

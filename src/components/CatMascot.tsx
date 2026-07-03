@@ -7,8 +7,8 @@ export function CatMascot() {
     useEffect(() => {
         const wander = setInterval(() => {
             setPos(prev => ({
-                x: Math.max(20, Math.min(window.innerWidth - 120, prev.x + (Math.random() - 0.5) * 100)),
-                y: Math.max(20, Math.min(window.innerHeight - 120, prev.y + (Math.random() - 0.5) * 100))
+                x: Math.max(20, Math.min(window.innerWidth - 220, prev.x + (Math.random() - 0.5) * 100)),
+                y: Math.max(20, Math.min(window.innerHeight - 220, prev.y + (Math.random() - 0.5) * 100))
             }));
 
             if (Math.random() > 0.8) {

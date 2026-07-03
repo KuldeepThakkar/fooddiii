@@ -49,6 +49,14 @@ export interface User {
     type: 'toriko';
     character: 'toriko' | 'komatsu' | 'sunny' | 'zebra' | 'coco';
   };
+  avatarConfig?: {
+    type: 'cat' | 'anime';
+    furColor?: string;
+    eyeColor?: string;
+    accessory?: string;
+    character?: string;
+    bgColor?: string;
+  };
   stats?: {
     placesAdded: number;
     favoritesCount: number;

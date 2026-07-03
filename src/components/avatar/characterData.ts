@@ -3,6 +3,8 @@ export const TORIKO_CHARACTERS = {
     name: 'Toriko',
     title: 'Bishokuya',
     tagline: 'Itadakimasu!',
+    image: '/avatars/toriko.jpg',
+    accentColor: '#DC143C',
     colors: {
       hair: '#1E90FF',
       skin: '#F5DEB3',
@@ -15,6 +17,8 @@ export const TORIKO_CHARACTERS = {
     name: 'Komatsu',
     title: 'Chef',
     tagline: 'Oishii!',
+    image: '/avatars/komatsu.jpg',
+    accentColor: '#FFD700',
     colors: {
       hair: '#8B4513',
       skin: '#FFE4C4',
@@ -27,6 +31,8 @@ export const TORIKO_CHARACTERS = {
     name: 'Sunny',
     title: 'Saiseiya',
     tagline: 'Beautiful!',
+    image: '/avatars/sunny.jpg',
+    accentColor: '#FF69B4',
     colors: {
       hair: '#FF69B4',
       skin: '#FFF0F5',
@@ -39,6 +45,8 @@ export const TORIKO_CHARACTERS = {
     name: 'Zebra',
     title: 'Voice Hunter',
     tagline: 'Zebraaaa!',
+    image: '/avatars/zebra.jpg',
+    accentColor: '#C71585',
     colors: {
       hair: '#1A1A1A',
       skin: '#5C4033',
@@ -51,6 +59,8 @@ export const TORIKO_CHARACTERS = {
     name: 'Coco',
     title: 'Poison User',
     tagline: 'Safe to eat.',
+    image: '/avatars/coco.jpg',
+    accentColor: '#228B22',
     colors: {
       hair: '#32CD32',
       skin: '#F5F5DC',
@@ -62,3 +72,11 @@ export const TORIKO_CHARACTERS = {
 } as const;
 
 export type TorikoCharacter = keyof typeof TORIKO_CHARACTERS;
+
+export const ANIME_CHARACTERS = [
+  { id: 'toriko', name: 'Toriko', title: 'Bishokuya', image: '/avatars/Toriko.jpg', accentColor: '#DC143C' },
+  { id: 'komatsu', name: 'Komatsu', title: 'Chef', image: '/avatars/Komatsu.jpg', accentColor: '#FFD700' },
+  { id: 'sunny', name: 'Sunny', title: 'Saiseiya', image: '/avatars/Sani.jpg', accentColor: '#FF69B4' },
+  { id: 'zebra', name: 'Zebra', title: 'Voice Hunter', image: '/avatars/Zebra.jpg', accentColor: '#C71585' },
+  { id: 'coco', name: 'Coco', title: 'Poison User', image: '/avatars/Coco.jpg', accentColor: '#228B22' },
+] as const;

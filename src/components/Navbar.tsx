@@ -4,13 +4,51 @@ import { useAuth } from '../hooks/useAuth';
 import { useUIStore } from '../stores/uiStore';
 import { useProtectedAction } from '../hooks/useProtectedAction';
 import { LogIn, Heart, Compass, Home, Menu, X, User } from 'lucide-react';
-import { TorikoAvatar } from './avatar/TorikoAvatar';
+import { CatAvatar } from './profile/CatAvatar';
+import { ANIME_CHARACTERS } from './avatar/characterData';
 
 const NAV_LINKS = [
     { to: '/', label: 'Home', Icon: Home, requiresAuth: false },
     { to: '/explore', label: 'Explore', Icon: Compass, requiresAuth: false },
     { to: '/favorites', label: 'Favorites', Icon: Heart, requiresAuth: true },
 ];
+
+function AvatarDisplay({ user, size = 36 }: { user: any; size?: number }) {
+    const avatarType = user?.avatarConfig?.type || (user?.catAvatar ? 'cat' : user?.torikoAvatar ? 'anime' : 'cat');
+
+    if (avatarType === 'cat') {
+        return (
+            <CatAvatar
+                furColor={user?.avatarConfig?.furColor || user?.catAvatar?.furColor}
+                eyeColor={user?.avatarConfig?.eyeColor || user?.catAvatar?.eyeColor}
+                accessory={user?.avatarConfig?.accessory || user?.catAvatar?.accessory}
+                size={size}
+            />
+        );
+    }
+
+    const charId = user?.avatarConfig?.character || user?.torikoAvatar?.character || 'toriko';
+    const character = ANIME_CHARACTERS.find(c => c.id === charId) || ANIME_CHARACTERS[0];
+
+    return (
+        <div className="relative">
+            <div
+                className="rounded-full overflow-hidden"
+                style={{ border: `2px solid ${character.accentColor}`, width: size, height: size }}
+            >
+                <img
+                    src={character.image}
+                    alt=""
+                    className="w-full h-full object-cover"
+                />
+            </div>
+            <div
+                className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white"
+                style={{ backgroundColor: character.accentColor }}
+            />
+        </div>
+    );
+}
 
 export function Navbar() {
     const { user } = useAuth();
@@ -35,6 +73,11 @@ export function Navbar() {
     const handleSignIn = () => {
         openModal('auth');
         setMobileOpen(false);
+    };
+
+    const handleAvatarClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        openModal('avatarCustomizer');
     };
 
     return (
@@ -69,11 +112,12 @@ export function Navbar() {
                         <div className="flex items-center">
                             {user ? (
                                 <Link to="/profile" className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition-colors">
-                                    <TorikoAvatar
-                                        character={user.torikoAvatar?.character || 'toriko'}
-                                        size={40}
-                                        isAnimated={false}
-                                    />
+                                    <button
+                                        onClick={handleAvatarClick}
+                                        className="focus:outline-none"
+                                    >
+                                        <AvatarDisplay user={user} size={36} />
+                                    </button>
                                     <span className="font-bold text-sm text-slate-700">{user.displayName || user.name}</span>
                                 </Link>
                             ) : (
@@ -131,7 +175,7 @@ export function Navbar() {
                                     onClick={() => setMobileOpen(false)}
                                     className="flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50"
                                 >
-                                    <img src={user.avatarUrl || user.avatar} alt={user.displayName || user.name} className="w-6 h-6 rounded-full" />
+                                    <AvatarDisplay user={user} size={24} />
                                     Profile
                                 </Link>
                             ) : (

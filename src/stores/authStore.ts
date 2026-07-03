@@ -22,6 +22,7 @@ interface AuthState {
   clearError: () => void;
   updateProfile: (data: Partial<User>) => Promise<void>;
   updateAvatar: (avatar: User['catAvatar']) => void;
+  updateAvatarConfig: (config: User['avatarConfig']) => void;
   initialize: () => void;
 }
 
@@ -139,6 +140,32 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } else {
       updatedUser.catAvatar = avatar;
     }
+    saveCurrentUser(updatedUser);
+    set({ user: updatedUser });
+  },
+
+  updateAvatarConfig: (config: User['avatarConfig']) => {
+    const { user } = get();
+    if (!user) return;
+
+    const updatedUser = {
+      ...user,
+      avatarConfig: config,
+    };
+
+    if (config?.type === 'cat') {
+      updatedUser.catAvatar = {
+        furColor: config.furColor || '#1A1A1A',
+        eyeColor: config.eyeColor || '#FFD700',
+        accessory: (config.accessory as 'none' | 'bow' | 'glasses' | 'hat' | 'crown') || 'none',
+      };
+    } else if (config?.type === 'anime') {
+      updatedUser.torikoAvatar = {
+        type: 'toriko',
+        character: (config.character as 'toriko' | 'komatsu' | 'sunny' | 'zebra' | 'coco') || 'toriko',
+      };
+    }
+
     saveCurrentUser(updatedUser);
     set({ user: updatedUser });
   },

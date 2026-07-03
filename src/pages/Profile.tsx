@@ -3,24 +3,78 @@ import { useAuth } from '../hooks/useAuth';
 import { usePlaces } from '../hooks/usePlaces';
 import { PlaceCard } from '../components/PlaceCard';
 import { PlaceDetailDrawer } from '../components/PlaceDetailDrawer';
-import { LogOut, Map, Award, Heart, Navigation } from 'lucide-react';
+import { LogOut, Map, Award, Heart, Navigation, Share2 } from 'lucide-react';
 import { Place } from '../types';
 import { AuthGuard } from '../components/auth/AuthGuard';
+import { CatAvatar } from '../components/profile/CatAvatar';
+import { AvatarCustomizer } from '../components/profile/AvatarCustomizer';
+import { useUIStore } from '../stores/uiStore';
+import { useNavigate } from 'react-router-dom';
+import { ANIME_CHARACTERS } from '../components/avatar/characterData';
+
+function ProfileAvatar({ user }: { user: any }) {
+    const avatarType = user?.avatarConfig?.type || (user?.catAvatar ? 'cat' : user?.torikoAvatar ? 'anime' : 'cat');
+
+    if (avatarType === 'cat') {
+        return (
+            <CatAvatar
+                furColor={user?.avatarConfig?.furColor || user?.catAvatar?.furColor}
+                eyeColor={user?.avatarConfig?.eyeColor || user?.catAvatar?.eyeColor}
+                accessory={user?.avatarConfig?.accessory || user?.catAvatar?.accessory}
+                size={120}
+            />
+        );
+    }
+
+    const charId = user?.avatarConfig?.character || user?.torikoAvatar?.character || 'toriko';
+    const character = ANIME_CHARACTERS.find(c => c.id === charId) || ANIME_CHARACTERS[0];
+
+    return (
+        <div className="relative">
+            <div
+                className="rounded-[2.5rem] overflow-hidden"
+                style={{ border: `3px solid ${character.accentColor}`, width: 160, height: 160 }}
+            >
+                <img
+                    src={character.image}
+                    alt=""
+                    className="w-full h-full object-cover"
+                />
+            </div>
+            <div
+                className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-[3px] border-white shadow-md"
+                style={{ backgroundColor: character.accentColor }}
+            />
+        </div>
+    );
+}
 
 export function Profile() {
-    const { user, logout } = useAuth();
+    const { user, logout, updateAvatarConfig } = useAuth();
     const { places, favorites } = usePlaces();
+    const { addToast } = useUIStore();
+    const navigate = useNavigate();
     const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+    const [showCustomizer, setShowCustomizer] = useState(false);
 
-    // Calculate Stats
     const myAddedPlaces = places.filter(p => p.createdBy === user?.id || p.createdBy === user?.email);
     const myFavoritePlaces = favorites.places;
+    const mySharedSpots = myAddedPlaces;
 
-    // Calculate Avg Rating of added places
     const totalRatingSum = myAddedPlaces.reduce((acc, curr) => acc + curr.rating, 0);
     const avgRating = myAddedPlaces.length > 0
         ? (totalRatingSum / myAddedPlaces.length).toFixed(1)
         : '0.0';
+
+    const handleAvatarSave = (config: { type: 'cat' | 'anime'; furColor?: string; eyeColor?: string; accessory?: string; character?: string; bgColor?: string }) => {
+        updateAvatarConfig(config);
+        setShowCustomizer(false);
+        if (config.type === 'cat') {
+            addToast({ type: 'success', title: 'Meow! Looking good 😺' });
+        } else {
+            addToast({ type: 'success', title: `Hunter ${config.character} selected! 🍖` });
+        }
+    };
 
     return (
         <AuthGuard>
@@ -40,11 +94,19 @@ export function Profile() {
                         <div className="flex flex-col md:flex-row items-center md:items-start md:space-x-12">
                             <div className="relative group">
                                 <div className="absolute -inset-2 bg-gradient-to-tr from-[#004F30] to-green-100 rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity"></div>
-                                <img
-                                    src={user?.avatarUrl || user?.avatar}
-                                    alt={user?.displayName || user?.name}
-                                    className="relative h-40 w-40 rounded-[2.5rem] border-8 border-white shadow-2xl transition-transform group-hover:scale-105 duration-500"
-                                />
+                                <button
+                                    onClick={() => setShowCustomizer(true)}
+                                    className="relative block focus:outline-none"
+                                >
+                                    <div className="h-40 w-40 rounded-[2.5rem] border-8 border-white shadow-2xl overflow-hidden transition-transform group-hover:scale-105 duration-500 bg-slate-100 flex items-center justify-center">
+                                        <ProfileAvatar user={user} />
+                                    </div>
+                                    <div className="absolute inset-0 rounded-[2.5rem] bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                        <span className="opacity-0 group-hover:opacity-100 text-white text-xs font-bold bg-black/50 px-3 py-1 rounded-full transition-opacity">
+                                            Edit
+                                        </span>
+                                    </div>
+                                </button>
                             </div>
 
                             <div className="mt-6 md:mt-2 text-center md:text-left flex-1 space-y-4">
@@ -53,25 +115,26 @@ export function Profile() {
                                     <p className="text-slate-400 font-bold tracking-widest text-xs uppercase">{user?.email}</p>
                                 </div>
 
-                            <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
-                                <StatCard icon={<Map className="w-5 h-5" />} label="Contributions" value={myAddedPlaces.length} color="text-slate-700" />
-                                <StatCard icon={<Award className="w-5 h-5" />} label="Rank Index" value={avgRating} color="text-[#004F30]" />
-                                <StatCard icon={<Heart className="w-5 h-5" />} label="Favorites" value={myFavoritePlaces.length} color="text-rose-600" />
+                                <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
+                                    <StatCard icon={<Map className="w-5 h-5" />} label="Contributions" value={mySharedSpots.length} color="text-slate-700" />
+                                    <StatCard icon={<Award className="w-5 h-5" />} label="Rank Index" value={avgRating} color="text-[#004F30]" />
+                                    <StatCard icon={<Heart className="w-5 h-5" />} label="Favorites" value={myFavoritePlaces.length} color="text-rose-600" />
+                                </div>
                             </div>
-                        </div>
 
-                        <button
-                            onClick={logout}
-                            className="mt-8 md:mt-4 flex items-center px-8 py-3.5 bg-slate-100 hover:bg-slate-200 rounded-2xl text-[10px] font-black text-slate-500 uppercase tracking-widest transition-all"
-                        >
-                            <LogOut className="w-4 h-4 mr-2" />
-                            Abandon Session
-                        </button>
+                            <button
+                                onClick={logout}
+                                className="mt-8 md:mt-4 flex items-center px-8 py-3.5 bg-slate-100 hover:bg-slate-200 rounded-2xl text-[10px] font-black text-slate-500 uppercase tracking-widest transition-all"
+                            >
+                                <LogOut className="w-4 h-4 mr-2" />
+                                Abandon Session
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div className="py-20 space-y-24">
-                    {/* Favorite Places */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-24">
+                    {/* Saved Favorites */}
                     <section>
                         <div className="flex items-center justify-between mb-10">
                             <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter italic flex items-center">
@@ -84,12 +147,12 @@ export function Profile() {
                         {myFavoritePlaces.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {myFavoritePlaces.map(place => (
-                                    <PlaceCard 
-                                        key={place.id} 
-                                        place={place} 
+                                    <PlaceCard
+                                        key={place.id}
+                                        place={place}
                                         isFavorite={favorites.isFavorite(place.id)}
                                         onToggleFavorite={() => favorites.toggle(place.id)}
-                                        onViewDetails={setSelectedPlace} 
+                                        onViewDetails={setSelectedPlace}
                                     />
                                 ))}
                             </div>
@@ -100,7 +163,43 @@ export function Profile() {
                         )}
                     </section>
 
-                    {/* Added Places */}
+                    {/* My Shared Spots */}
+                    <section>
+                        <div className="flex items-center justify-between mb-10">
+                            <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter italic flex items-center">
+                                <Share2 className="w-6 h-6 mr-3 text-[#004F30]" />
+                                My Shared Spots ({mySharedSpots.length})
+                            </h3>
+                            <div className="h-px flex-1 bg-slate-200 mx-8 hidden md:block"></div>
+                        </div>
+
+                        {mySharedSpots.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                                {mySharedSpots.map(place => (
+                                    <PlaceCard
+                                        key={place.id}
+                                        place={place}
+                                        isFavorite={favorites.isFavorite(place.id)}
+                                        onToggleFavorite={() => favorites.toggle(place.id)}
+                                        onViewDetails={setSelectedPlace}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-[3rem] p-20 text-center">
+                                <p className="text-slate-400 font-black uppercase text-xs tracking-widest italic mb-4">You haven't shared any spots yet! 🍕</p>
+                                <button
+                                    onClick={() => navigate('/explore?share=true')}
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#004F30] text-white text-sm font-black hover:bg-[#005C39] transition-colors shadow-md"
+                                >
+                                    <Share2 className="w-4 h-4" />
+                                    Share a Spot
+                                </button>
+                            </div>
+                        )}
+                    </section>
+
+                    {/* Mapped Coordinates */}
                     <section>
                         <div className="flex items-center justify-between mb-10">
                             <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter italic flex items-center">
@@ -113,12 +212,12 @@ export function Profile() {
                         {myAddedPlaces.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {myAddedPlaces.map(place => (
-                                    <PlaceCard 
-                                        key={place.id} 
-                                        place={place} 
+                                    <PlaceCard
+                                        key={place.id}
+                                        place={place}
                                         isFavorite={favorites.isFavorite(place.id)}
                                         onToggleFavorite={() => favorites.toggle(place.id)}
-                                        onViewDetails={setSelectedPlace} 
+                                        onViewDetails={setSelectedPlace}
                                     />
                                 ))}
                             </div>
@@ -135,7 +234,19 @@ export function Profile() {
                 place={selectedPlace}
                 onClose={() => setSelectedPlace(null)}
             />
-        </div>
+
+            {showCustomizer && (
+                <AvatarCustomizer
+                    initialType={user?.avatarConfig?.type || (user?.catAvatar ? 'cat' : 'anime')}
+                    initialFurColor={user?.avatarConfig?.furColor || user?.catAvatar?.furColor}
+                    initialEyeColor={user?.avatarConfig?.eyeColor || user?.catAvatar?.eyeColor}
+                    initialAccessory={user?.avatarConfig?.accessory || user?.catAvatar?.accessory}
+                    initialCharacter={user?.avatarConfig?.character || user?.torikoAvatar?.character || 'toriko'}
+                    initialBgColor={user?.avatarConfig?.bgColor || '#DC143C'}
+                    onSave={handleAvatarSave}
+                    onClose={() => setShowCustomizer(false)}
+                />
+            )}
         </AuthGuard>
     );
 }

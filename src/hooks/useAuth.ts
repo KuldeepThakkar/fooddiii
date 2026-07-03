@@ -6,7 +6,7 @@ import { useAuthStore } from '../stores/authStore';
  * Auto-initializes auth state on mount
  */
 export function useAuth() {
-  const { user, isAuthenticated, isLoading, error, initialize, login, signup, logout, clearError, updateProfile } = useAuthStore();
+  const { user, isAuthenticated, isLoading, error, initialize, login, signup, logout, clearError, updateProfile, updateAvatarConfig } = useAuthStore();
 
   useEffect(() => {
     initialize();
@@ -22,5 +22,6 @@ export function useAuth() {
     logout,
     clearError,
     updateProfile,
+    updateAvatarConfig,
   };
 }
