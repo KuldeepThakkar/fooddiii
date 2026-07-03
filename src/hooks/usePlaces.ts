@@ -8,6 +8,7 @@ import { useFavoritesStore } from '../stores/favoritesStore';
  */
 export function usePlaces() {
   const places = usePlacesStore((state) => state.places);
+  const isHydrated = usePlacesStore((state) => state.isHydrated);
   const isLoading = usePlacesStore((state) => state.isLoading);
   const error = usePlacesStore((state) => state.error);
   const initialize = usePlacesStore((state) => state.initialize);
@@ -39,6 +40,7 @@ export function usePlaces() {
 
   return {
     places: activePlaces,
+    isHydrated,
     isLoading,
     error,
     addPlace,

@@ -15,7 +15,7 @@ import { useUIStore } from '../stores/uiStore';
 const POPULAR_FOOD_TAGS = ['momos', 'chaat', 'dosa', 'vada pav', 'pav bhaji', 'chai', 'dabeli', 'kachori'];
 
 export function Explore() {
-    const { places, addPlace, getNearbyPlaces, searchPlaces, getOpenNow, favorites } = usePlaces();
+    const { places, isHydrated, addPlace, getNearbyPlaces, searchPlaces, getOpenNow, favorites } = usePlaces();
     const { user } = useAuth();
     const executeIfAuth = useProtectedAction();
     const { openModal } = useUIStore();
@@ -103,6 +103,7 @@ export function Explore() {
 
     // Combined filter
     const filteredPlaces = useMemo(() => {
+        if (!isHydrated || places.length === 0) return [];
         let result: Place[] = places;
 
         // Search/tag filter
@@ -127,7 +128,7 @@ export function Explore() {
         }
 
         return result;
-    }, [places, showOnlyOpen, searchTerm, isSurprise, userLocation, range, isDaredevil, activeTag, searchPlaces, getNearbyPlaces, getOpenNow]);
+    }, [places, isHydrated, showOnlyOpen, searchTerm, isSurprise, userLocation, range, isDaredevil, activeTag, searchPlaces, getNearbyPlaces, getOpenNow]);
 
     const handleAddPlace = async (data: any) => {
         // Convert old format to new format

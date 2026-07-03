@@ -21,6 +21,7 @@ interface AuthState {
   logout: () => void;
   clearError: () => void;
   updateProfile: (data: Partial<User>) => Promise<void>;
+  updateAvatar: (avatar: User['catAvatar']) => void;
   initialize: () => void;
 }
 
@@ -126,5 +127,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         error: error instanceof Error ? error.message : 'Update failed',
       });
     }
+  },
+
+  updateAvatar: (avatar: User['catAvatar']) => {
+    const { user } = get();
+    if (!user) return;
+    
+    const updatedUser = { ...user, catAvatar: avatar };
+    saveCurrentUser(updatedUser);
+    set({ user: updatedUser });
   },
 }));

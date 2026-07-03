@@ -18,3 +18,83 @@
 {"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1782990487345,"hypothesisId":"H1","runId":"pre-fix"}
 {"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1782990487398,"hypothesisId":"H2","runId":"pre-fix"}
 {"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1782990487401,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:boot","message":"main.tsx executing","data":{"hasRoot":true},"timestamp":1783065017307,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1783065017316,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783065017333,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783065017335,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:boot","message":"main.tsx executing","data":{"hasRoot":true},"timestamp":1783065025209,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1783065025217,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783065025256,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783065025260,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:boot","message":"main.tsx executing","data":{"hasRoot":true},"timestamp":1783066174765,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1783066174782,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066174811,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066174814,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066742139,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066742141,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066975050,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066975047,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066975647,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066975648,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066988844,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066988843,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066990121,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066990123,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066990994,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066990996,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066991653,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066991651,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066992547,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066992544,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066993821,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066993839,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066994245,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066994248,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066994650,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066994652,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066995412,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066995414,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066996705,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066996711,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066998300,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066998306,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066998651,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783066998652,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067005522,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067005520,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067006669,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067006672,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067007024,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067007026,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067007646,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067007648,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067773761,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067773784,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067775662,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067775665,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067782133,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067782137,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067782706,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067782713,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067827685,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067827693,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067828095,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067828098,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:boot","message":"main.tsx executing","data":{"hasRoot":true},"timestamp":1783067853928,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1783067853935,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067853952,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067853955,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:boot","message":"main.tsx executing","data":{"hasRoot":true},"timestamp":1783067856763,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"main.tsx:rendered","message":"ReactDOM.render called","data":{},"timestamp":1783067856777,"hypothesisId":"H1","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067856957,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067856961,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067933345,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067933346,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067934648,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067934650,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067943612,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067943614,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067944657,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067944660,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067973659,"hypothesisId":"H2","runId":"pre-fix"}
+{"sessionId":"cb284e","location":"App.tsx:render","message":"App component rendering","data":{},"timestamp":1783067973661,"hypothesisId":"H2","runId":"pre-fix"}

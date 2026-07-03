@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUIStore } from '../stores/uiStore';
 import { useProtectedAction } from '../hooks/useProtectedAction';
-import { LogIn, Heart, Compass, Home, User, Menu, X } from 'lucide-react';
+import { LogIn, Heart, Compass, Home, Menu, X, User } from 'lucide-react';
+import { CatAvatar } from './profile/CatAvatar';
 
 const NAV_LINKS = [
     { to: '/', label: 'Home', Icon: Home, requiresAuth: false },
@@ -68,10 +69,11 @@ export function Navbar() {
                         <div className="flex items-center">
                             {user ? (
                                 <Link to="/profile" className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition-colors">
-                                    <img
-                                        src={user.avatarUrl || user.avatar}
-                                        alt={user.displayName || user.name}
-                                        className="w-8 h-8 rounded-full border-2 border-[#004F30]"
+                                    <CatAvatar
+                                        furColor={user.catAvatar?.furColor}
+                                        eyeColor={user.catAvatar?.eyeColor}
+                                        accessory={user.catAvatar?.accessory}
+                                        size={32}
                                     />
                                     <span className="font-bold text-sm text-slate-700">{user.displayName || user.name}</span>
                                 </Link>

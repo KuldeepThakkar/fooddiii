@@ -40,6 +40,17 @@ export interface User {
   role: 'user' | 'admin';
   createdAt: string;
   favorites?: string[]; // place IDs (optional, can use favoritesStore)
+  catAvatar?: {
+    furColor: string;
+    eyeColor: string;
+    accessory: 'none' | 'bow' | 'glasses' | 'hat' | 'crown';
+  };
+  stats?: {
+    placesAdded: number;
+    favoritesCount: number;
+    reviewsCount: number;
+    checkIns: number;
+  };
 }
 
 export interface Review {

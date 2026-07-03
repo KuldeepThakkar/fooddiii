@@ -61,7 +61,7 @@ const getPlaceEmoji = (type: string) => {
 // Create a function to generate a custom "pop out" icon
 const createPopOutIcon = (place: Place) => {
     const isOpen = isPlaceOpen(place);
-    const emoji = getPlaceEmoji(place.type);
+    const emoji = getPlaceEmoji(place.category);
     const size = isOpen ? 60 : 45; // XL Scaling!
     const color = isOpen ? '#22c55e' : '#ef4444';
 
@@ -138,10 +138,10 @@ export function PlaceMap({ places, userLocation, range, onLocationSet }: PlaceMa
                 )}
 
                 {places.map(place => (
-                    place.lat && place.lng ? (
+                    place.coordinates?.[0] && place.coordinates?.[1] ?  (
                         <Marker
                             key={place.id}
-                            position={[place.lat, place.lng]}
+                            position={[place.coordinates[0], place.coordinates[1]]}
                             icon={createPopOutIcon(place)}
                         >
                             <Popup>
@@ -149,10 +149,10 @@ export function PlaceMap({ places, userLocation, range, onLocationSet }: PlaceMa
                                     <div className="flex justify-between items-start mb-2">
                                         <h3 className="font-bold text-gray-900 leading-tight">{place.name}</h3>
                                         <span className="text-xl">
-                                            {isPlaceOpen(place) ? getPlaceEmoji(place.type) : '❌'}
+                                            {isPlaceOpen(place) ? getPlaceEmoji(place.category) : '❌'}
                                         </span>
                                     </div>
-                                    <p className="text-xs font-semibold text-orange-600 bg-orange-50 inline-block px-2 py-0.5 rounded-full mb-2">{place.type}</p>
+                                    <p className="text-xs font-semibold text-orange-600 bg-orange-50 inline-block px-2 py-0.5 rounded-full mb-2">{place.category}</p>
                                     <div className="flex items-center space-x-2 mb-2">
                                         <div className={`w-2 h-2 rounded-full ${isPlaceOpen(place) ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
                                         <span className={`text-xs font-bold ${isPlaceOpen(place) ? 'text-green-600' : 'text-red-600'}`}>

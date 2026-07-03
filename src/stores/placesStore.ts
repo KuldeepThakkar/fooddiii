@@ -5,6 +5,7 @@ import { generateUUID, haversineDistance, isOpenNow } from '../lib/utils';
 
 interface PlacesState {
   places: Place[];
+  isHydrated: boolean;
   isLoading: boolean;
   error: string | null;
   
@@ -875,6 +876,7 @@ const SEED_PLACES: Omit<Place, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 
 
 export const usePlacesStore = create<PlacesState>((set, get) => ({
   places: [],
+  isHydrated: false,
   isLoading: false,
   error: null,
 
@@ -884,8 +886,10 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
       
       if (stored) {
         const places = JSON.parse(stored);
-        set({ places });
-        return;
+        if (Array.isArray(places) && places.length > 0) {
+          set({ places, isHydrated: true, isLoading: false });
+          return; // DON'T seed if data exists
+        }
       }
       
       // Check for v9 migration
@@ -901,11 +905,11 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
         }));
         localStorage.setItem(STORAGE_KEYS.PLACES, JSON.stringify(migratedPlaces));
         localStorage.removeItem('foodiespot_places_v9');
-        set({ places: migratedPlaces });
+        set({ places: migratedPlaces, isHydrated: true, isLoading: false });
         return;
       }
       
-      // Seed initial data
+      // Seed initial data only if no stored data
       const now = new Date().toISOString();
       const seededPlaces = SEED_PLACES.map((place) => ({
         ...place,
@@ -918,10 +922,10 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
       }));
       
       localStorage.setItem(STORAGE_KEYS.PLACES, JSON.stringify(seededPlaces));
-      set({ places: seededPlaces });
+      set({ places: seededPlaces, isHydrated: true, isLoading: false });
     } catch (error) {
       console.error('Error initializing places store:', error);
-      set({ error: 'Failed to load places' });
+      set({ error: 'Failed to load places', isHydrated: true, isLoading: false });
     }
   },
 
@@ -1024,7 +1028,9 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
     const { places } = get();
     return places.filter((place) => {
       if (place.status !== 'active') return false;
-      const distance = haversineDistance(lat, lng, place.coordinates[0], place.coordinates[1]);
+      const [placeLat, placeLng] = place.coordinates;
+      if (!Number.isFinite(placeLat) || !Number.isFinite(placeLng)) return false;
+      const distance = haversineDistance(lat, lng, placeLat, placeLng);
       return distance <= radiusKm;
     });
   },
