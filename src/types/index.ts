@@ -45,6 +45,10 @@ export interface User {
     eyeColor: string;
     accessory: 'none' | 'bow' | 'glasses' | 'hat' | 'crown';
   };
+  torikoAvatar?: {
+    type: 'toriko';
+    character: 'toriko' | 'komatsu' | 'sunny' | 'zebra' | 'coco';
+  };
   stats?: {
     placesAdded: number;
     favoritesCount: number;

@@ -129,11 +129,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  updateAvatar: (avatar: User['catAvatar']) => {
+  updateAvatar: (avatar: User['catAvatar'] | User['torikoAvatar']) => {
     const { user } = get();
-    if (!user) return;
+    if (!user || !avatar) return;
     
-    const updatedUser = { ...user, catAvatar: avatar };
+    const updatedUser = { ...user };
+    if ('character' in avatar) {
+      updatedUser.torikoAvatar = avatar;
+    } else {
+      updatedUser.catAvatar = avatar;
+    }
     saveCurrentUser(updatedUser);
     set({ user: updatedUser });
   },
