@@ -2,6 +2,11 @@ import { create } from 'zustand';
 import type { Place, PlaceCategory, PlaceStatus, EditRecord } from '../types';
 import { STORAGE_KEYS } from '../lib/constants';
 import { generateUUID, haversineDistance, isOpenNow } from '../lib/utils';
+import { useAuthStore } from './authStore';
+
+function getCurrentUserId() {
+  return useAuthStore.getState().user?.id ?? 'anonymous';
+}
 
 interface PlacesState {
   places: Place[];
@@ -937,7 +942,7 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
       id: generateUUID(),
       createdAt: now,
       updatedAt: now,
-      createdBy: 'current-user', // Will be replaced with actual user ID
+      createdBy: getCurrentUserId(),
       status: 'active',
       editHistory: [],
     };
@@ -973,7 +978,7 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
     });
     
     const editRecord: EditRecord = {
-      editedBy: 'current-user',
+      editedBy: getCurrentUserId(),
       editedAt: now,
       changes,
     };

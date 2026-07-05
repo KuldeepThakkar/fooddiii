@@ -3,7 +3,7 @@ export const TORIKO_CHARACTERS = {
     name: 'Toriko',
     title: 'Bishokuya',
     tagline: 'Itadakimasu!',
-    image: '/avatars/toriko.jpg',
+    image: '/avatars/Toriko.jpg',
     accentColor: '#DC143C',
     colors: {
       hair: '#1E90FF',
@@ -17,7 +17,7 @@ export const TORIKO_CHARACTERS = {
     name: 'Komatsu',
     title: 'Chef',
     tagline: 'Oishii!',
-    image: '/avatars/komatsu.jpg',
+    image: '/avatars/Komatsu.jpg',
     accentColor: '#FFD700',
     colors: {
       hair: '#8B4513',
@@ -31,7 +31,7 @@ export const TORIKO_CHARACTERS = {
     name: 'Sunny',
     title: 'Saiseiya',
     tagline: 'Beautiful!',
-    image: '/avatars/sunny.jpg',
+    image: '/avatars/Sani.jpg',
     accentColor: '#FF69B4',
     colors: {
       hair: '#FF69B4',
@@ -45,7 +45,7 @@ export const TORIKO_CHARACTERS = {
     name: 'Zebra',
     title: 'Voice Hunter',
     tagline: 'Zebraaaa!',
-    image: '/avatars/zebra.jpg',
+    image: '/avatars/Zebra.jpg',
     accentColor: '#C71585',
     colors: {
       hair: '#1A1A1A',
@@ -59,7 +59,7 @@ export const TORIKO_CHARACTERS = {
     name: 'Coco',
     title: 'Poison User',
     tagline: 'Safe to eat.',
-    image: '/avatars/coco.jpg',
+    image: '/avatars/Coco.jpg',
     accentColor: '#228B22',
     colors: {
       hair: '#32CD32',

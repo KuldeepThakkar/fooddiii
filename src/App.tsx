@@ -17,10 +17,6 @@ function App() {
     const initializeAuth = useAuthStore((state) => state.initialize);
     const initializePlaces = usePlacesStore((state) => state.initialize);
 
-    // #region agent log
-    fetch('http://127.0.0.1:7842/ingest/41b987d8-ba2a-4128-b946-11e5f4a4f935',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'cb284e'},body:JSON.stringify({sessionId:'cb284e',location:'App.tsx:render',message:'App component rendering',data:{},timestamp:Date.now(),hypothesisId:'H2',runId:'pre-fix'})}).catch(()=>{});
-    // #endregion
-
     useEffect(() => {
         initializeAuth();
         initializePlaces();

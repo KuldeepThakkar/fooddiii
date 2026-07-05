@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, MapPin, Loader2, Plus } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { PLACE_CATEGORIES, POPULAR_TAGS } from '../lib/constants';
+import { POPULAR_TAGS } from '../lib/constants';
 
 const placeSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters').max(100),

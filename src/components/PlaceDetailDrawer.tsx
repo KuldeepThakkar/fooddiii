@@ -174,8 +174,8 @@ export function PlaceDetailDrawer({ place, onClose }: PlaceDetailDrawerProps) {
                                                     </div>
                                                 </div>
                                                 <p className="text-sm text-slate-600 mt-1 leading-relaxed">{review.text}</p>
-                                                {review.photos && review.photos.length > 0 && (
-                                                    <img src={review.photos[0]} alt="Review photo" className="mt-2 rounded-xl w-full h-32 object-cover" />
+                                                {review.photoUrl && (
+                                                    <img src={review.photoUrl} alt="Review photo" className="mt-2 rounded-xl w-full h-32 object-cover" />
                                                 )}
                                                 <p className="text-[11px] text-slate-400 mt-2">
                                                     {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}

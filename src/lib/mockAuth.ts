@@ -101,6 +101,7 @@ export function createUser(name: string, email: string, password: string): User 
   const newUser: User = {
     id: generateUUID(),
     name,
+    displayName: name,
     email: email.toLowerCase(),
     role,
     createdAt: new Date().toISOString(),
