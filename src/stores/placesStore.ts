@@ -33,7 +33,7 @@ interface PlacesState {
   initialize: () => void;
 }
 
-const SEED_PLACES: Omit<Place, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'status' | 'editHistory'>[] = [
+const INITIAL_PLACES: Omit<Place, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'status' | 'editHistory'>[] = [
   // MOMO STALLS (8)
   {
     name: 'Manek Chowk Momo Center',
@@ -916,7 +916,7 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
       
       // Seed initial data only if no stored data
       const now = new Date().toISOString();
-      const seededPlaces = SEED_PLACES.map((place) => ({
+      const seededPlaces = INITIAL_PLACES.map((place) => ({
         ...place,
         id: generateUUID(),
         createdAt: now,

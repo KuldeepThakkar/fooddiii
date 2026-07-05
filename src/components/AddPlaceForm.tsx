@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { X, MapPin, Loader2, Plus } from 'lucide-react';
+import { X, MapPin, Loader2, Plus, Navigation } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { POPULAR_TAGS } from '../lib/constants';
+import { MapPickerModal } from './MapPickerModal';
 
 const placeSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters').max(100),
@@ -26,14 +27,18 @@ interface AddPlaceFormProps {
     defaultLng?: number;
 }
 
+type LocationMethod = 'gps' | 'map' | 'manual';
+
 export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: AddPlaceFormProps) {
     const { user } = useAuth();
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [customTag, setCustomTag] = useState('');
     const [isDetecting, setIsDetecting] = useState(false);
-    const [detectedCoords, setDetectedCoords] = useState<{ lat: number; lng: number } | null>(
-        defaultLat && defaultLng ? { lat: defaultLat, lng: defaultLng } : null
+    const [locationMethod, setLocationMethod] = useState<LocationMethod>('gps');
+    const [coordinates, setCoordinates] = useState<[number, number]>(
+        defaultLat && defaultLng ? [defaultLat, defaultLng] : [23.0225, 72.5714]
     );
+    const [showMapPicker, setShowMapPicker] = useState(false);
 
     const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<PlaceFormData>({
         resolver: zodResolver(placeSchema),
@@ -51,7 +56,8 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
         setIsDetecting(true);
         navigator.geolocation.getCurrentPosition(
             (pos) => {
-                setDetectedCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                const newCoords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+                setCoordinates(newCoords);
                 setValue('location', `Near ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
                 setIsDetecting(false);
             },
@@ -80,8 +86,7 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
         onAddPlace({
             ...data,
             tags: selectedTags,
-            lat: detectedCoords?.lat || defaultLat,
-            lng: detectedCoords?.lng || defaultLng,
+            coordinates: coordinates,
             addedBy: user?.id,
         });
     };
@@ -180,12 +185,57 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                                 )}
                             </button>
                         </div>
-                        {detectedCoords && (
+                        {coordinates && (
                             <p className="text-emerald-600 text-[10px] mt-1 font-semibold">
-                                ✓ GPS coordinates captured
+                                ✓ Coordinates: [{coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}]
                             </p>
                         )}
                         {errors.location && <p className="text-rose-500 text-xs mt-1">{errors.location.message}</p>}
+                    </div>
+                </div>
+
+                {/* Location Method Selection */}
+                <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        Select Location Method
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setLocationMethod('gps')}
+                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${
+                                locationMethod === 'gps'
+                                    ? 'border-[#004F30] bg-emerald-50'
+                                    : 'border-slate-200 hover:border-slate-300'
+                            }`}
+                        >
+                            <Navigation className="w-5 h-5 text-[#004F30]" />
+                            <span className="text-xs font-semibold text-slate-700">Current GPS</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => { setLocationMethod('map'); setShowMapPicker(true); }}
+                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${
+                                locationMethod === 'map'
+                                    ? 'border-[#004F30] bg-emerald-50'
+                                    : 'border-slate-200 hover:border-slate-300'
+                            }`}
+                        >
+                            <MapPin className="w-5 h-5 text-[#004F30]" />
+                            <span className="text-xs font-semibold text-slate-700">Pick on Map</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setLocationMethod('manual')}
+                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${
+                                locationMethod === 'manual'
+                                    ? 'border-[#004F30] bg-emerald-50'
+                                    : 'border-slate-200 hover:border-slate-300'
+                            }`}
+                        >
+                            <MapPin className="w-5 h-5 text-[#004F30]" />
+                            <span className="text-xs font-semibold text-slate-700">Use Map Pin</span>
+                        </button>
                     </div>
                 </div>
 
@@ -316,6 +366,14 @@ export function AddPlaceForm({ onAddPlace, onCancel, defaultLat, defaultLng }: A
                     {isSubmitting ? 'Sharing...' : 'Share Spot 🍜'}
                 </button>
             </div>
+
+            {/* Map Picker Modal */}
+            <MapPickerModal
+                isOpen={showMapPicker}
+                onClose={() => setShowMapPicker(false)}
+                onLocationSelect={setCoordinates}
+                initialCoordinates={coordinates}
+            />
         </div>
     );
 }
