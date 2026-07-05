@@ -112,9 +112,11 @@ export function Explore() {
             result = searchPlaces(term);
         }
 
-        // Location filter
+        // Location filter — intersect with current result, don't replace it
         if (userLocation && !isDaredevil) {
-            result = getNearbyPlaces(userLocation.lat, userLocation.lng, range);
+            const nearby = getNearbyPlaces(userLocation.lat, userLocation.lng, range);
+            const nearbyIds = new Set(nearby.map((p) => p.id));
+            result = result.filter((p) => nearbyIds.has(p.id));
         }
 
         // Open now filter

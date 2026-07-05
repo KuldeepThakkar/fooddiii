@@ -888,33 +888,55 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
   initialize: () => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.PLACES);
-      
+      console.log('[A] stored key exists?', !!stored);
+      console.log('[A] stored length?', stored?.length);
+
+      const normalizePlace = (place: any): Place => {
+        let coordinates: [number, number] = [23.0225, 72.5714];
+        if (Array.isArray(place.coordinates) && place.coordinates.length >= 2) {
+          coordinates = [Number(place.coordinates[0]), Number(place.coordinates[1])];
+        } else if (place.coordinates?.lat != null && place.coordinates?.lng != null) {
+          coordinates = [Number(place.coordinates.lat), Number(place.coordinates.lng)];
+        } else if (place.lat != null && place.lng != null) {
+          coordinates = [Number(place.lat), Number(place.lng)];
+        }
+
+        return {
+          ...place,
+          coordinates,
+          status: (place.status || 'active') as PlaceStatus,
+          editHistory: place.editHistory || [],
+        };
+      };
+
       if (stored) {
-        const places = JSON.parse(stored);
-        if (Array.isArray(places) && places.length > 0) {
+        const parsed = JSON.parse(stored);
+        console.log('[A] parsed array length?', parsed.length);
+        console.log('[A] first place name?', parsed[0]?.name);
+        console.log('[A] first place coords?', parsed[0]?.coordinates);
+
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const places = parsed.map(normalizePlace);
+          localStorage.setItem(STORAGE_KEYS.PLACES, JSON.stringify(places));
           set({ places, isHydrated: true, isLoading: false });
-          return; // DON'T seed if data exists
+          return;
         }
       }
-      
+
       // Check for v9 migration
       const v9Data = localStorage.getItem('foodiespot_places_v9');
       if (v9Data) {
-        // Migrate v9 to v10 schema
         const v9Places = JSON.parse(v9Data);
-        const migratedPlaces = v9Places.map((place: any) => ({
-          ...place,
-          status: place.status || 'active',
-          editHistory: place.editHistory || [],
-          coordinates: place.coordinates || [23.0225, 72.5714],
-        }));
+        const migratedPlaces = v9Places.map(normalizePlace);
         localStorage.setItem(STORAGE_KEYS.PLACES, JSON.stringify(migratedPlaces));
         localStorage.removeItem('foodiespot_places_v9');
         set({ places: migratedPlaces, isHydrated: true, isLoading: false });
         return;
       }
-      
-      // Seed initial data only if no stored data
+
+      console.log('[A] NO STORED DATA — seeding INITIAL_PLACES');
+      console.log('[A] INITIAL_PLACES length?', INITIAL_PLACES.length);
+
       const now = new Date().toISOString();
       const seededPlaces = INITIAL_PLACES.map((place) => ({
         ...place,
@@ -925,7 +947,7 @@ export const usePlacesStore = create<PlacesState>((set, get) => ({
         status: 'active' as PlaceStatus,
         editHistory: [] as EditRecord[],
       }));
-      
+
       localStorage.setItem(STORAGE_KEYS.PLACES, JSON.stringify(seededPlaces));
       set({ places: seededPlaces, isHydrated: true, isLoading: false });
     } catch (error) {
