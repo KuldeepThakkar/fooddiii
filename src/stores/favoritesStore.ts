@@ -5,16 +5,12 @@ import type { Place } from '../types';
 
 interface FavoritesState {
   favoriteIds: string[];
-  isLoading: boolean;
   
   // Actions
   toggleFavorite: (placeId: string) => void;
   isFavorite: (placeId: string) => boolean;
   getFavoritePlaces: (allPlaces: Place[]) => Place[];
   clearFavorites: () => void;
-  
-  // Optional: Clear on logout
-  clearOnLogout: () => void;
 }
 
 // Zustand doesn't serialize Sets, so we use array
@@ -22,12 +18,11 @@ export const useFavoritesStore = create<FavoritesState>()(
   persist(
     (set, get) => ({
       favoriteIds: [],
-      isLoading: false,
 
       toggleFavorite: (placeId: string) => {
         const { favoriteIds } = get();
         const index = favoriteIds.indexOf(placeId);
-        
+
         if (index > -1) {
           // Remove if exists
           set({
@@ -47,16 +42,12 @@ export const useFavoritesStore = create<FavoritesState>()(
 
       getFavoritePlaces: (allPlaces: Place[]) => {
         const { favoriteIds } = get();
-        return allPlaces.filter((place) => 
+        return allPlaces.filter((place) =>
           favoriteIds.includes(place.id) && place.status === 'active'
         );
       },
 
       clearFavorites: () => {
-        set({ favoriteIds: [] });
-      },
-
-      clearOnLogout: () => {
         set({ favoriteIds: [] });
       },
     }),

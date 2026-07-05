@@ -70,9 +70,10 @@ export interface Review {
   placeId: string;
   userId: string;
   userName: string;
+  userAvatar?: string;
   rating: number; // 1-5
   text: string;
-  photos?: string[];
+  photoUrl?: string;
   createdAt: string;
   helpful?: number; // upvotes
 }

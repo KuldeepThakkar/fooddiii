@@ -8,25 +8,22 @@ type ModalType = 'auth' | 'editPlace' | 'deleteConfirm' | 'avatarCustomizer' | n
 
 interface UIState {
   theme: 'light' | 'dark' | 'system';
-  sidebarOpen: boolean;
   activeModal: ModalType;
   modalData: Record<string, any>;
   toasts: Toast[];
-  
+
   // Actions
   setTheme: (theme: UIState['theme']) => void;
   openModal: (modal: ModalType, data?: Record<string, any>) => void;
   closeModal: () => void;
   addToast: (toast: Omit<Toast, 'id'>) => void;
   removeToast: (id: string) => void;
-  toggleSidebar: () => void;
 }
 
 export const useUIStore = create<UIState>()(
   persist(
     (set, get) => ({
       theme: 'system',
-      sidebarOpen: false,
       activeModal: null,
       modalData: {},
       toasts: [],
@@ -56,7 +53,7 @@ export const useUIStore = create<UIState>()(
           ...toast,
           duration: toast.duration || 4000,
         };
-        
+
         set((state) => ({
           toasts: [...state.toasts, newToast],
         }));
@@ -72,18 +69,11 @@ export const useUIStore = create<UIState>()(
           toasts: state.toasts.filter((toast) => toast.id !== id),
         }));
       },
-
-      toggleSidebar: () => {
-        set((state) => ({
-          sidebarOpen: !state.sidebarOpen,
-        }));
-      },
     }),
     {
       name: STORAGE_KEYS.UI_THEME,
       partialize: (state) => ({
         theme: state.theme,
-        sidebarOpen: state.sidebarOpen,
       }),
     }
   )
